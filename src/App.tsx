@@ -102,67 +102,83 @@ function App() {
     return Object.keys(originalCounts).sort()
   }, [originalCounts])
 
+  // Notepad state
+  const [notes, setNotes] = useState('')
+
   return (
-    <div className="container" role="main">
-      <h1>Kotodama</h1>
+    <div className="app-layout">
+      <div className="container" role="main">
+        <h1>Kotodama</h1>
 
-      <div className="input-section">
-        <label htmlFor="original">Phrase de départ</label>
-        <input
-          id="original"
-          type="text"
-          placeholder="Entrez votre texte ici..."
-          value={originalPhrase}
-          onChange={(e) => {
-            setOriginalPhrase(e.target.value)
-            setAnagram('') 
-            setError(null)
-          }}
-          aria-label="Phrase originale à transformer en anagramme"
-        />
-      </div>
+        <div className="input-section">
+          <label htmlFor="original">Phrase de départ</label>
+          <input
+            id="original"
+            type="text"
+            placeholder="Entrez votre texte ici..."
+            value={originalPhrase}
+            onChange={(e) => {
+              setOriginalPhrase(e.target.value)
+              setAnagram('') 
+              setError(null)
+            }}
+            aria-label="Phrase originale à transformer en anagramme"
+          />
+        </div>
 
-      <div 
-        className={`letter-pool-wrapper ${isComplete ? 'complete' : ''}`}
-        aria-live="polite"
-        aria-label="Pool de lettres disponibles"
-      >
-        <div className="letter-pool">
-          {uniqueLetters.length === 0 && (
-            <p style={{ opacity: 0.5, fontStyle: 'italic', color: 'var(--color-sumi)' }}>
-              Les caractères s'afficheront ici...
-            </p>
-          )}
-          {uniqueLetters.map((char) => {
-            const count = remainingCounts[char] || 0
-            const isAvailable = count > 0
-            return (
-              <div
-                key={char}
-                className={`letter-box ${isAvailable ? 'available' : 'unavailable'}`}
-                aria-label={`Lettre ${char}, ${count} restante(s)`}
-              >
-                {char}
-                {count > 0 && <span className="count-superscript" aria-hidden="true">{count}</span>}
-              </div>
-            )
-          })}
+        <div 
+          className={`letter-pool-wrapper ${isComplete ? 'complete' : ''}`}
+          aria-live="polite"
+          aria-label="Pool de lettres disponibles"
+        >
+          <div className="letter-pool">
+            {uniqueLetters.length === 0 && (
+              <p style={{ opacity: 0.5, fontStyle: 'italic', color: 'var(--color-sumi)' }}>
+                Les caractères s'afficheront ici...
+              </p>
+            )}
+            {uniqueLetters.map((char) => {
+              const count = remainingCounts[char] || 0
+              const isAvailable = count > 0
+              return (
+                <div
+                  key={char}
+                  className={`letter-box ${isAvailable ? 'available' : 'unavailable'}`}
+                  aria-label={`Lettre ${char}, ${count} restante(s)`}
+                >
+                  {char}
+                  {count > 0 && <span className="count-superscript" aria-hidden="true">{count}</span>}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        <div className="input-section">
+          <label htmlFor="anagram">Votre Anagramme</label>
+          <input
+            id="anagram"
+            type="text"
+            className={error ? 'error' : ''}
+            placeholder="Composez votre anagramme..."
+            value={anagram}
+            onChange={handleAnagramChange}
+            aria-invalid={!!error}
+            aria-errormessage="anagram-error"
+          />
+          <div className="error-message" id="anagram-error" role="alert">{error}</div>
         </div>
       </div>
 
-      <div className="input-section">
-        <label htmlFor="anagram">Votre Anagramme</label>
-        <input
-          id="anagram"
-          type="text"
-          className={error ? 'error' : ''}
-          placeholder="Composez votre anagramme..."
-          value={anagram}
-          onChange={handleAnagramChange}
-          aria-invalid={!!error}
-          aria-errormessage="anagram-error"
+      <div className="notepad-section">
+        <label htmlFor="notepad">Bloc-notes</label>
+        <textarea
+          id="notepad"
+          placeholder="Mots de secours, idées..."
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          aria-label="Espace pour vos notes et brouillons"
         />
-        <div className="error-message" id="anagram-error" role="alert">{error}</div>
       </div>
     </div>
   )
