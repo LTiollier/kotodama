@@ -124,9 +124,34 @@ h1 {
   text-transform: lowercase;
   position: relative;
   display: inline-block;
-  align-self: center;
   filter: drop-shadow(0 4px 10px rgba(0,0,0,0.05));
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 0.5rem;
+}
+
+.clear-btn {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-sumi);
+  padding: 0.5rem 1rem;
+  border-radius: 0.8rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0.6;
+}
+
+.clear-btn:hover {
+  opacity: 1;
+  background: var(--color-vermilion);
+  color: white;
+  border-color: var(--color-vermilion);
 }
 
 h1::after {

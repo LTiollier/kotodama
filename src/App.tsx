@@ -3,9 +3,33 @@ import confetti from 'canvas-confetti'
 import './App.css'
 
 function App() {
-  const [originalPhrase, setOriginalPhrase] = useState('')
-  const [anagram, setAnagram] = useState('')
+  const [originalPhrase, setOriginalPhrase] = useState(() => localStorage.getItem('kotodama_original') || '')
+  const [anagram, setAnagram] = useState(() => localStorage.getItem('kotodama_anagram') || '')
+  const [notes, setNotes] = useState(() => localStorage.getItem('kotodama_notes') || '')
   const [error, setError] = useState<string | null>(null)
+
+  // Persist state to localStorage
+  useEffect(() => {
+    localStorage.setItem('kotodama_original', originalPhrase)
+  }, [originalPhrase])
+
+  useEffect(() => {
+    localStorage.setItem('kotodama_anagram', anagram)
+  }, [anagram])
+
+  useEffect(() => {
+    localStorage.setItem('kotodama_notes', notes)
+  }, [notes])
+
+  // Clear all data
+  const clearAll = () => {
+    if (window.confirm('Voulez-vous vraiment tout effacer ?')) {
+      setOriginalPhrase('')
+      setAnagram('')
+      setNotes('')
+      setError(null)
+    }
+  }
 
   // Helper to count letters in a string, ignoring accents
   const getLetterCounts = (str: string) => {
@@ -102,13 +126,15 @@ function App() {
     return Object.keys(originalCounts).sort()
   }, [originalCounts])
 
-  // Notepad state
-  const [notes, setNotes] = useState('')
-
   return (
     <div className="app-layout">
       <div className="container" role="main">
-        <h1>Kotodama</h1>
+        <div className="header-row">
+          <h1>Kotodama</h1>
+          <button className="clear-btn" onClick={clearAll} aria-label="Tout effacer">
+            Effacer tout
+          </button>
+        </div>
 
         <div className="input-section">
           <label htmlFor="original">Phrase de départ</label>
